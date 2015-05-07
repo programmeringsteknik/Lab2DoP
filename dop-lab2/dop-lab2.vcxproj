@@ -87,7 +87,6 @@
     <None Include="docs\Laboration2_PQUEUE_2015.pdf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\DoP2\DoP2\pqchunk.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\performance.c" />
     <ClCompile Include="source\pqarray.c" />
@@ -104,7 +103,7 @@
     <ClInclude Include="inc\random.h" />
     <ClInclude Include="inc\simpio.h" />
     <ClInclude Include="inc\strlib.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="source\resource.h" />
     <ClInclude Include="source\common.h" />
     <ClInclude Include="source\performance.h" />
     <ClInclude Include="source\pqueue.h" />
