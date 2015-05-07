@@ -87,6 +87,7 @@
     <None Include="docs\Laboration2_PQUEUE_2015.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\DoP2\DoP2\pqchunk.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\performance.c" />
     <ClCompile Include="source\pqarray.c" />
