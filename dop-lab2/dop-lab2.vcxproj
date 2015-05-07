@@ -90,6 +90,7 @@
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\performance.c" />
     <ClCompile Include="source\pqarray.c" />
+    <ClCompile Include="source\pqlist.c" />
     <ClCompile Include="source\pqueuetest.c" />
   </ItemGroup>
   <ItemGroup>
