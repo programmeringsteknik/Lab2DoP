@@ -33,6 +33,9 @@
     <ClCompile Include="source\pqlist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\pqchunk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\pqueue.h">
