@@ -43,12 +43,23 @@ int getParent(int index){
 void getChildren(int *left, int *right, int parent){
 
 	*left = parent * 2;
-	*right =(parent * 2) +1;
+	*right = (parent * 2) +1;
 
 }
 void Enqueue(pqueueADT pqueue, int newValue){
-
-
+	int i,temp,temp2;
+	/*OM DEN ÄR FÖR STOR*/
+	if (pqueue->numOfElements >= pqueue->size) {
+		//utökning av kön
+	}
+	pqueue->elements[pqueue->numOfElements+1] = newValue;
+	i = pqueue->numOfElements+1;
+	while (newValue > pqueue->elements[getParent(i)]){
+		temp = getParent(i);
+		temp2 = pqueue->elements[temp];
+		pqueue->elements[temp2] = pqueue->elements[i];
+		pqueue->elements[i] = temp;
+	}
 
 }
 
