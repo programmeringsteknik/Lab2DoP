@@ -80,21 +80,25 @@ void Enqueue(pqueueADT pqueue, int newValue){
 			newCell = New(cellT *);
 			newCell->currentNumEle = 0;
 			newCell->next = NULL;
-			newCell->block[0] = newValue;
-			newCell->currentNumEle++;
-			cur->next = newCell;
+
 			a = MAX_ELEMS_PER_BLOCK / 2;
 			b = MAX_ELEMS_PER_BLOCK - a;
 			for (i = a; i < MAX_ELEMS_PER_BLOCK; i++){
-				cur->block[i] = newCell->block[counter];
+				newCell->block[counter] = cur->block[i];
 				counter++;
 			}
+			cur->currentNumEle = a;
+			newCell->currentNumEle = b;
 			if (newValue < newCell->block[0]){
 				insertElement(newCell, newValue);
 			}
-			insertElement(cur, newValue);
+			else{
+				insertElement(cur, newValue);
 		}
-		else{
+		newCell->next = cur->next;
+		cur->next = newCell;
+	}
+	else{
 			insertElement(cur, newValue);
 
 		}
@@ -111,9 +115,9 @@ int DequeueMax(pqueueADT pqueue) {
 	cellT *toBeDeleted;
 	int value, i;
 
-	if (IsEmpty(pqueue)){
+	if (IsEmpty(pqueue))
 		Error("Tried to dequeue max from an empty pqueue!");
-	}
+	
 	toBeDeleted = pqueue->head;
 	value = pqueue->head->block[0];
 	pqueue->head->currentNumEle--;
