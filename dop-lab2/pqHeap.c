@@ -1,13 +1,6 @@
-/*
-* File: pqHeap.c
-* ------------------
-*
-* Markus Carlsson & Philip Arvidsson
-* Senast modifierad: 08/5 - 2015
-*/
-
-#include "genlib.h"
 #include "pqueue.h"
+#include "genlib.h"
+
 
 #define ELEMENTS_START 10
 
@@ -19,6 +12,5 @@ struct pqueueCDT {
 };
 
 pqueueADT newHeap(void){
-
 
 }
