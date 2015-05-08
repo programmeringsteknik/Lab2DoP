@@ -10,7 +10,8 @@ struct pqueueCDT {
 	int size;
 }pqueueCDT;
 /*funktionsprototyper*/
-int getParent(pqueueADT pqueue, int index);
+int getParent(int index);
+void getChildren(int *left, int *right, int parent);
 
 pqueueADT newHeap(void){
 	pqueueADT pqueue;
@@ -33,8 +34,21 @@ bool isFull(pqueueADT pqueue){
 	return(pqueue->numOfElements == pqueue->size);
 }
 
-int getParent(pqueueADT pqueue, int index){
+int getParent(int index){
+	int result;
+	result = index / 2;
+	return(result);
+}
+/*värden*/
+void getChildren(int *left, int *right, int parent){
+
+	*left = parent * 2;
+	*right =(parent * 2) +1;
+
+}
+void Enqueue(pqueueADT pqueue, int newValue){
 
 
 
 }
+
