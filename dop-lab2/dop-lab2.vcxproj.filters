@@ -36,7 +36,7 @@
     <ClCompile Include="source\pqchunk.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pqHeap.c">
+    <ClCompile Include="source\pqHeap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -87,7 +87,6 @@
     <None Include="docs\Laboration2_PQUEUE_2015.pdf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pqHeap.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\performance.c" />
     <ClCompile Include="source\pqarray.c">
@@ -96,6 +95,7 @@
     <ClCompile Include="source\pqchunk.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="source\pqHeap.c" />
     <ClCompile Include="source\pqlist.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
