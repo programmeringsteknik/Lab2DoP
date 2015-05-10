@@ -1,121 +1,128 @@
+//------------------------------------------------
+// INCLUDES
+//------------------------------------------------
 
 #include "pqueue.h"
+
 #include "genlib.h"
 
-#define ELEMENTS_START 10
+//------------------------------------------------
+// CONSTANTS
+//------------------------------------------------
+
+#define InitialMaxElements 16
+
+//------------------------------------------------
+// TYPES
+//------------------------------------------------
 
 struct pqueueCDT {
-	int *elements;
-	int numOfElements;
-	int size;
-}pqueueCDT;
-/*funktionsprototyper*/
-int getParent(int index);
-void getChildren(int *left, int *right, int parent);
-int getParent(int index);
-void increaseArray(pqueueADT pqueue);
+    int* elements;
+    int  numElements;
+    int  maxElements;
+};
 
-pqueueADT NewPQueue(void){
-	pqueueADT pqueue;
+//------------------------------------------------
+// FUNCTIONS
+//------------------------------------------------
 
-	pqueue = New(pqueueADT);
-	pqueue->elements = NewArray(ELEMENTS_START, int);
-	pqueue->size = ELEMENTS_START;
-	pqueue->numOfElements = 0;
+pqueueADT NewPQueue() {
+    pqueueADT pqueue = malloc(sizeof(struct pqueueCDT));
 
-	return(pqueue);
-}
-void FreePQueue(pqueueADT pqueue){
-	FreeBlock(pqueue->elements);
-	FreeBlock(pqueue);
-}
-bool IsEmpty(pqueueADT pqueue){
-	return(pqueue->numOfElements == 0);
-}
-bool IsFull(pqueueADT pqueue){
-	return(pqueue->numOfElements == pqueue->size);
+    pqueue->elements    = malloc(sizeof(int) * InitialMaxElements);
+    pqueue->numElements = 0;
+    pqueue->maxElements = InitialMaxElements;
+
+    return pqueue;
 }
 
-int getParent(int index){
-	int result;
-	result = index / 2;
-	return(result);
-}
-/*värden*/
-void getChildren(int *left, int *right, int parent){
-
-	*left = parent * 2;
-	*right = (parent * 2) +1;
-
-}
-void Enqueue(pqueueADT pqueue, int newValue){
-	int i,temp,temp2,indexParent;
-	/*OM DEN ÄR FÖR STOR*/
-	if (pqueue->numOfElements >= pqueue->size) {
-		increaseArray(pqueue->elements);
-	}
-	pqueue->elements[pqueue->numOfElements+1] = newValue;
-	pqueue->numOfElements += 1;
-	i = pqueue->numOfElements;
-	while (newValue > pqueue->elements[getParent(i)]){
-		temp = getParent(i);
-		temp2 = pqueue->elements[temp];
-		pqueue->elements[temp] = pqueue->elements[i];
-		pqueue->elements[i] = temp;
-	}
-
-}
-int DequeueMax(pqueueADT pqueue){
-	int temp, index, result, maxIndex;
-	int leftChild, rightChild;
-
-	if (IsEmpty(pqueue)){
-		Error("Tried to dequeue mac from an empty pqueue!");
-	}
-
-	index = pqueue->numOfElements;
-	result = pqueue->elements[1];
-	pqueue->elements[1] = pqueue->elements[index];
-	pqueue->numOfElements--;
-
-	getChildren(&leftChild, &rightChild, index);
-	if (pqueue->elements[leftChild] > pqueue->elements[rightChild]){
-		maxIndex = pqueue->elements[leftChild];
-	}
-	else{
-		maxIndex = pqueue->elements[rightChild];
-	}
-	while (maxIndex <= pqueue->numOfElements && index < pqueue->numOfElements){
-		temp = pqueue->elements[maxIndex];
-		pqueue->elements[maxIndex] = pqueue->elements[index];
-		pqueue->elements[index] = temp;
-		index = maxIndex;
-		getChildren(&leftChild, &rightChild, index);
-			if (pqueue->elements[leftChild] > pqueue->elements[rightChild]){
-			maxIndex = pqueue->elements[leftChild];
-			}
-			else{
-				maxIndex = pqueue->elements[rightChild];
-			}
-	}
-
-
-
+void FreePQueue(pqueueADT pqueue) {
+    free(pqueue->elements);
+    free(pqueue);
 }
 
-int BytesUsed(pqueueADT pqueue)
-{
-	return (sizeof(*pqueue)+sizeof(int) * pqueue->numOfElements);
+bool IsEmpty(pqueueADT pqueue) {
+    return (pqueue->numElements==0);
 }
-void increaseArray(pqueueADT pqueue){
-	int x;
-	int *largerArray;
-	largerArray = NewArray(pqueue->size * 2, int);
-	pqueue->size = pqueue->size * 2;
 
-	for (x = 1; x < pqueue->numOfElements; x++){
-		largerArray[x] = pqueue->elements[x];
-	}
-	FreeBlock(pqueue->elements);
-	pqueue->elements = largerArray;
+bool IsFull(pqueueADT pqueue) {
+    return FALSE;
+}
+
+void Enqueue(pqueueADT pqueue, int newValue) {
+    int index = ++pqueue->numElements;
+
+    pqueue->elements[index] = newValue;
+
+    while (index > 1) {
+        int* parent = &pqueue->elements[index >> 1];
+        int* child  = &pqueue->elements[index];
+
+        if (*parent > *child)
+            break;
+
+        int tmp     = *child;
+            *child  = *parent;
+            *parent = tmp;
+
+        index >>= 1;
+    }
+}
+
+int DequeueMax(pqueueADT pqueue) {
+    if (pqueue->numElements <= 0)
+        Error("DequeueMax attempted on empty queue.");
+
+    int min = pqueue->elements[pqueue->numElements];
+    int max = pqueue->elements[1];
+
+    pqueue->elements[1] = min;
+
+    pqueue->numElements--;
+
+    int index = 1;
+    while (TRUE) {
+        int *parent    = &pqueue->elements[index];
+        int leftIndex  = index << 1;
+        int rightIndex = leftIndex + 1;
+
+        // Om vänsterbarnet ligger utanför kön så finns det garanterat inte.
+        if (leftIndex > pqueue->numElements)
+            break;
+
+        int *leftChild  = &pqueue->elements[leftIndex];
+        int *rightChild = NULL;
+
+        // Vi använder bara högerbarnet om det finns...
+        if (rightIndex <= pqueue->numElements)
+            rightChild = &pqueue->elements[rightIndex];
+
+        // Vi börjar med att peka på vänster barn...
+        int *child = leftChild;
+
+        index = leftIndex;
+
+        // Men om höger barn är större än väster barn, så pekar vi på det
+        // istället...
+        if (rightChild && *rightChild > *leftChild) {
+            index = rightIndex;
+            child = rightChild;
+        }
+
+        // Om barnet är mindre än föräldern så är allt i ordning, så vi
+        // behöver inte göra något mer.
+        if (*child < *parent)
+            break;
+
+        // Här byter vi plats på barn och förälder och upprepar alltihop.
+        int tmp     = *parent;
+            *parent = *child;
+            *child  = tmp;
+    }
+
+    return max;
+}
+
+int BytesUsed(pqueueADT pqueue) {
+    return sizeof(struct pqueueCDT) + pqueue->numElements * sizeof(int);
 }
