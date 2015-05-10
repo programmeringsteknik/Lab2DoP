@@ -52,6 +52,15 @@ bool IsFull(pqueueADT pqueue) {
 void Enqueue(pqueueADT pqueue, int newValue) {
     int index = ++pqueue->numElements;
 
+    if (index >= pqueue->maxElements) {
+        int *oldElements = pqueue->elements;
+        pqueue->maxElements <<= 1;
+        pqueue->elements = malloc(sizeof(int) * pqueue->maxElements);
+        for (int i = 0; i < index; i++)
+            pqueue->elements[i] = oldElements[i];
+        free(oldElements);
+    }
+
     pqueue->elements[index] = newValue;
 
     while (index > 1) {
@@ -75,6 +84,8 @@ int DequeueMax(pqueueADT pqueue) {
 
     int min = pqueue->elements[pqueue->numElements];
     int max = pqueue->elements[1];
+
+    pqueue->elements[pqueue->numElements] = 0xdead;
 
     pqueue->elements[1] = min;
 
@@ -124,5 +135,5 @@ int DequeueMax(pqueueADT pqueue) {
 }
 
 int BytesUsed(pqueueADT pqueue) {
-    return sizeof(struct pqueueCDT) + pqueue->numElements * sizeof(int);
+    return sizeof(struct pqueueCDT) + pqueue->maxElements * sizeof(int);
 }
