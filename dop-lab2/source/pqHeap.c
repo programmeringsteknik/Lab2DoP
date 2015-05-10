@@ -109,9 +109,9 @@ int DequeueMax(pqueueADT pqueue) {
             rightChild = &pqueue->elements[rightIndex];
 
         // Vi börjar med att peka på vänster barn...
+        index = leftIndex;
         int *child = leftChild;
 
-        index = leftIndex;
 
         // ..men om höger barn är större än väster barn, så pekar vi på det
         // istället...
