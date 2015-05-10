@@ -93,20 +93,21 @@ int DequeueMax(pqueueADT pqueue) {
 
     int index = 1;
     while (TRUE) {
-        int *parent    = &pqueue->elements[index];
-        int leftIndex  = index << 1;
-        int rightIndex = leftIndex + 1;
+        int leftIndex = index << 1;
 
         // Om vänsterbarnet ligger utanför kön så finns det garanterat inte.
         if (leftIndex > pqueue->numElements)
             break;
 
-        int *leftChild  = &pqueue->elements[leftIndex];
         int *rightChild = NULL;
+        int  rightIndex = leftIndex + 1;
 
         // Vi använder bara högerbarnet om det finns...
         if (rightIndex <= pqueue->numElements)
-            rightChild = &pqueue->elements[rightIndex];
+            rightChild = pqueue->elements + rightIndex;
+
+        int *parent    = pqueue->elements + index;
+        int *leftChild = pqueue->elements + leftIndex;
 
         // Vi börjar med att peka på vänster barn...
         index = leftIndex;
