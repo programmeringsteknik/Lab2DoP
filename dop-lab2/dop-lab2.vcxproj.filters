@@ -27,15 +27,6 @@
     <ClCompile Include="source\performance.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\pqarray.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\pqlist.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\pqchunk.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\pqHeap.c">
       <Filter>Source Files</Filter>
     </ClCompile>

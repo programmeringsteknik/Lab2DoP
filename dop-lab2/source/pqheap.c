@@ -69,20 +69,18 @@ void Enqueue(pqueueADT pqueue, int newValue) {
     *(basePtr+index) = newValue;
 
     while (index > 1) {
-        int *child  = basePtr + index;
+        int *child = basePtr + index;
 
         index >>= 1;
 
         int *parent = basePtr + index;
 
-        int parentVal = *parent;
-        int childVal  = *child;
-
-        if (parentVal > childVal)
+        if (*parent > *child)
             break;
 
-        *parent = childVal;
-        *child  = parentVal;
+        int tmp = *child;
+        *child  = *parent;
+        *parent = tmp;
     }
 }
 
@@ -90,11 +88,11 @@ int DequeueMax(pqueueADT pqueue) {
     if (pqueue->numElements <= 0)
         Error("DequeueMax attempted on empty queue.");
 
+    int  index       = 1;
     int *basePtr     = pqueue->elements;
     int  minValue    = *(basePtr+pqueue->numElements);
-    int  maxValue    = *(basePtr+1);
+    int  maxValue    = *(basePtr+index);
     int  numElements = --pqueue->numElements;
-    int  index = 1;
 
     *(basePtr+1) = minValue;
 
@@ -106,22 +104,19 @@ int DequeueMax(pqueueADT pqueue) {
         if (index > numElements)
             break;
 
-        int *child    = basePtr + index;
-        int  childVal = *child;
+        int *child = basePtr + index;
 
-        if ((index < numElements) && (*(child+1) > childVal)) {
+        if ((index < numElements) && (*(child+1) > *child)) {
             child++;
             index++;
-            childVal = *child;
         }
 
-        int parentVal = *parent;
-
-        if (childVal < parentVal)
+        if (*child < *parent)
             break;
 
-        *parent = childVal;
-        *child  = parentVal;
+        int tmp = *child;
+        *child  = *parent;
+        *parent = tmp;
     }
 
     return maxValue;
