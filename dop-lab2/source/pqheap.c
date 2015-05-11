@@ -58,7 +58,7 @@ void Enqueue(pqueueADT pqueue, int newValue) {
         pqueue->maxElements <<= 1;
         pqueue->elements      = malloc(sizeof(int) * pqueue->maxElements);
 
-        for (int i = 0; i < index; i++)
+        for (int i = 1; i < index; i++)
             pqueue->elements[i] = oldElements[i];
 
         free(oldElements);
