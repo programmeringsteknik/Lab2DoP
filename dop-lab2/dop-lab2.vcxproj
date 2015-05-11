@@ -95,7 +95,7 @@
     <ClCompile Include="source\pqchunk.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="source\pqHeap.c" />
+    <ClCompile Include="source\pqheap.c" />
     <ClCompile Include="source\pqlist.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>

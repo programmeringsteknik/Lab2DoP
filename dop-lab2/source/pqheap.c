@@ -54,27 +54,35 @@ void Enqueue(pqueueADT pqueue, int newValue) {
 
     if (index >= pqueue->maxElements) {
         int *oldElements = pqueue->elements;
+
         pqueue->maxElements <<= 1;
-        pqueue->elements = malloc(sizeof(int) * pqueue->maxElements);
+        pqueue->elements      = malloc(sizeof(int) * pqueue->maxElements);
+
         for (int i = 0; i < index; i++)
             pqueue->elements[i] = oldElements[i];
+
         free(oldElements);
     }
 
-    pqueue->elements[index] = newValue;
+    int *basePtr = pqueue->elements;
+
+    *(basePtr+index) = newValue;
 
     while (index > 1) {
-        int* parent = &pqueue->elements[index >> 1];
-        int* child  = &pqueue->elements[index];
-
-        if (*parent > *child)
-            break;
-
-        int tmp     = *child;
-            *child  = *parent;
-            *parent = tmp;
+        int *child  = basePtr + index;
 
         index >>= 1;
+
+        int *parent = basePtr + index;
+
+        int parentVal = *parent;
+        int childVal  = *child;
+
+        if (parentVal > childVal)
+            break;
+
+        *parent = childVal;
+        *child  = parentVal;
     }
 }
 
@@ -82,56 +90,41 @@ int DequeueMax(pqueueADT pqueue) {
     if (pqueue->numElements <= 0)
         Error("DequeueMax attempted on empty queue.");
 
-    int min = pqueue->elements[pqueue->numElements];
-    int max = pqueue->elements[1];
+    int *basePtr     = pqueue->elements;
+    int  minValue    = *(basePtr+pqueue->numElements);
+    int  maxValue    = *(basePtr+1);
+    int  numElements = --pqueue->numElements;
+    int  index = 1;
 
-    pqueue->elements[pqueue->numElements] = 0xdead;
+    *(basePtr+1) = minValue;
 
-    pqueue->elements[1] = min;
-
-    pqueue->numElements--;
-
-    int index = 1;
     while (TRUE) {
-        int leftIndex = index << 1;
+        int *parent = basePtr + index;
 
-        // Om vänsterbarnet ligger utanför kön så finns det garanterat inte.
-        if (leftIndex > pqueue->numElements)
+        index <<= 1;
+
+        if (index > numElements)
             break;
 
-        int *rightChild = NULL;
-        int  rightIndex = leftIndex + 1;
+        int *child    = basePtr + index;
+        int  childVal = *child;
 
-        // Vi använder bara högerbarnet om det finns...
-        if (rightIndex <= pqueue->numElements)
-            rightChild = pqueue->elements + rightIndex;
-
-        int *parent    = pqueue->elements + index;
-        int *leftChild = pqueue->elements + leftIndex;
-
-        // Vi börjar med att peka på vänster barn...
-        index = leftIndex;
-        int *child = leftChild;
-
-        // ..men om höger barn är större än väster barn, så pekar vi på det
-        // istället...
-        if (rightChild && *rightChild > *leftChild) {
-            index = rightIndex;
-            child = rightChild;
+        if ((index < numElements) && (*(child+1) > childVal)) {
+            child++;
+            index++;
+            childVal = *child;
         }
 
-        // Om barnet är mindre än föräldern så är allt i ordning, så vi
-        // behöver inte göra något mer.
-        if (*child < *parent)
+        int parentVal = *parent;
+
+        if (childVal < parentVal)
             break;
 
-        // Här byter vi plats på barn och förälder och upprepar alltihop.
-        int tmp     = *parent;
-            *parent = *child;
-            *child  = tmp;
+        *parent = childVal;
+        *child  = parentVal;
     }
 
-    return max;
+    return maxValue;
 }
 
 int BytesUsed(pqueueADT pqueue) {
